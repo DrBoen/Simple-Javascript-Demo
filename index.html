@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    // SCORM API interaction script to redirect based on role
+    function redirectBasedOnRole() {
+      var API = null;
+
+      function findAPI(win) {
+        if (win.API) return win.API;
+        if (win.parent && win.parent !== win) return findAPI(win.parent);
+        return null;
+      }
+
+      API = findAPI(window);
+      if (!API) {
+        alert('SCORM API not found. Defaulting to student view.');
+        window.location.href = "student.html";
+        return;
+      }
+
+      var studentId = API.LMSGetValue('cmi.core.student_id');
+      var studentName = API.LMSGetValue('cmi.core.student_name');
+
+      // Mock: Check if the user is an instructor (In practice, fetch role info from LMS)
+      if (studentId && studentId.startsWith("instructor")) {
+        window.location.href = "instructor.html";
+      } else {
+        window.location.href = "student.html";
+      }
+    }
+    window.onload = redirectBasedOnRole;
+  </script>
+  <title>Clinical Evaluation</title>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>

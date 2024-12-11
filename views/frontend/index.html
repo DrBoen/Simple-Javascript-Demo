@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple JS App</title>
+</head>
+<body>
+  <h1>Simple JavaScript App</h1>
+  <form id="dataForm">
+    <label for="dataInput">Enter some data:</label>
+    <input type="text" id="dataInput" required />
+    <button type="submit">Submit</button>
+  </form>
+  <div id="response"></div>
+
+  <script>
+    const form = document.getElementById('dataForm');
+    const responseDiv = document.getElementById('response');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const data = document.getElementById('dataInput').value;
+
+      try {
+        const response = await fetch('/api/data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ data }),
+        });
+
+        const result = await response.json();
+        responseDiv.textContent = `Server response: ${result.message}`;
+      } catch (error) {
+        responseDiv.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
